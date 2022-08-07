@@ -125,7 +125,11 @@ temp_users_upsert = """
 INSERT INTO users
 SELECT * FROM temp_users
 ON CONFLICT (user_id) 
-DO NOTHING
+DO UPDATE SET 
+    first_name = EXCLUDED.first_name,
+    last_name = EXCLUDED.last_name,
+    gender = EXCLUDED.gender,
+    "level" = EXCLUDED."level"
 """
 
 temp_songplays_copy = "COPY temp_songplays(start_time, user_id, level, song_id, artist_id, session_id, location, user_agent) FROM STDIN WITH HEADER CSV"

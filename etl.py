@@ -119,12 +119,14 @@ def dt_to_csv_buffer(df):
     
 def upsert_bulk_users(cur, df):
     """
+    - drop duplicates
     - create a csv on memory from df
     - create a temp table
     - add all data to temp table
     - upsert data on table
     - drop temp table
     """
+    df = df.drop_duplicates(subset=['userId'], keep='last')
     buffer = dt_to_csv_buffer(df)
     cur.execute(temp_users_create)
     cur.copy_expert(temp_users_copy, buffer)
